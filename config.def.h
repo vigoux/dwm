@@ -18,7 +18,12 @@ static const char dracula_line[] = "#44475a";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { dracula_fg , dracula_bg, dracula_line },
-	[SchemeSel]  = { dracula_bg, dracula_purple,  dracula_purple  },
+	[SchemeSel]  = { dracula_fg, dracula_bg,  dracula_purple  },
+	[SchemeStatus] = { dracula_fg, dracula_bg, dracula_purple },
+	[SchemeTagsSel] = { dracula_bg, dracula_purple, dracula_purple },
+	[SchemeTagsNorm] = { dracula_fg , dracula_bg, dracula_line },
+	[SchemeInfoNorm] = { dracula_fg , dracula_bg, dracula_line },
+	[SchemeInfoSel]  = { dracula_fg, dracula_bg,  dracula_purple  },
 };
 
 /* tagging */
@@ -32,6 +37,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "st-256color", NULL, "/home/thomas/scripts/ncspot", 1 << 7, 0, -1 },
 };
 
 /* layout(s) */
@@ -56,7 +62,6 @@ static const Layout layouts[] = {
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define OPENTERMAPP(app) { "st", "-e", app, NULL }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -64,13 +69,22 @@ static const char *dmenucmd[] = { "dmenu_run", NULL };
 static const char *termcmd[]  = { "st", "-e", "/bin/fish", NULL };
 
 // Applications
+#define OPENTERMAPP(app) { "st", "-e", app, NULL }
 static const char *browser[] = { "firefox", NULL };
-static const char *todocmd[] = OPENTERMAPP("/bin/calcurse");
-static const char *mailcmd[] = OPENTERMAPP("/bin/neomutt");
+static const char *todocmd[] = OPENTERMAPP("calcurse");
+static const char *mailcmd[] = OPENTERMAPP("neomutt");
+static const char *musiccmd[] = OPENTERMAPP("/home/thomas/scripts/ncspot");
 
 // Sounds and music
 #define MASTERVOL(change) { "amixer", "set", "Master", change, NULL }
+static const char *volup[] = MASTERVOL("1db+");
+static const char *voldown[] = MASTERVOL("1db-");
+static const char *voltoggle[] = MASTERVOL("toggle");
+
 #define PLAYER(action) { "playerctl", action, NULL }
+static const char *playerpause[] = PLAYER("play-pause");
+static const char *playernext[] = PLAYER("next");
+static const char *playerprevious[] = PLAYER("previous");
 
 static Key keys[] = {
 	/* modifier						key			function		argument */
@@ -79,13 +93,14 @@ static Key keys[] = {
 	{ MODKEY,						XK_t,		spawn,			{.v = todocmd } },
 	{ 0, 							XF86XK_Mail,	spawn,		{.v = mailcmd } },
 	{ 0, 							XF86XK_HomePage,	spawn,	{.v = browser } },
-	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	{.v = MASTERVOL("1db+") } },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	{.v = MASTERVOL("1db-") } },
-	{ 0, 							XF86XK_AudioMute,	spawn,	{.v = MASTERVOL("toggle") } },
-	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = PLAYER("play-pause") } },
-	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = PLAYER("next") } },
-	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = PLAYER("previous") } },
+	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	{.v = volup } },
+	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	{.v = voldown } },
+	{ 0, 							XF86XK_AudioMute,	spawn,	{.v = voltoggle } },
+	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
+	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
+	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = playerprevious } },
 	{ MODKEY,						XK_Return, spawn,			{.v = termcmd } },
+	{ MODKEY,						XK_m, spawn,				{.v = musiccmd } },
 	{ MODKEY,						XK_b,      togglebar,      {0} },
 	{ MODKEY,						XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,						XK_k,      focusstack,     {.i = -1 } },
@@ -96,10 +111,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,				XK_Return, zoom,           {0} },
 	{ MODKEY,						XK_Tab,    view,           {0} },
 	{ MODKEY,						XK_x,      killclient,     {0} },
-	{ MODKEY,						XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,						XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,						XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,						XK_space,  setlayout,      {0} },
+	{ MODKEY|ShiftMask,				XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY|ShiftMask,				XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,				XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,				XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,				XK_space,  togglefloating, {0} },
 	{ MODKEY,						XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,				XK_0,      tag,            {.ui = ~0 } },
