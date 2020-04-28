@@ -64,12 +64,13 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
+#define TERM "st"
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", NULL };
-static const char *termcmd[]  = { "st", "-e", "/bin/fish", NULL };
+static const char *termcmd[]  = { TERM, "-e", "/bin/fish", NULL };
 
 // Applications
-#define OPENTERMAPP(app) { "st", "-e", app, NULL }
+#define OPENTERMAPP(app) { TERM, "-e", app, NULL }
 static const char *browser[] = { "firefox", NULL };
 static const char *todocmd[] = OPENTERMAPP("calcurse");
 static const char *mailcmd[] = OPENTERMAPP("neomutt");
