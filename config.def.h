@@ -67,7 +67,7 @@ static const Layout layouts[] = {
 #define TERM "st"
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", NULL };
-static const char *termcmd[]  = { TERM, "-e", "/bin/fish", NULL };
+static const char *checkmail[] = { "/home/thomas/scripts/checkmail" };
 
 // Applications
 #define OPENTERMAPP(app) { TERM, "-e", app, NULL }
@@ -75,36 +75,43 @@ static const char *browser[] = { "firefox", NULL };
 static const char *todocmd[] = OPENTERMAPP("calcurse");
 static const char *mailcmd[] = OPENTERMAPP("neomutt");
 static const char *musiccmd[] = OPENTERMAPP("/home/thomas/scripts/ncspot");
+static const char *termcmd[]  = OPENTERMAPP("/bin/fish");
+static const char *filemanagercmd[] = OPENTERMAPP("/bin/nnn");
 
 // Sounds and music
-#define MASTERVOL(change) { "amixer", "set", "Master", change, NULL }
-static const char *volup[] = MASTERVOL("1db+");
-static const char *voldown[] = MASTERVOL("1db-");
-static const char *voltoggle[] = MASTERVOL("toggle");
+/* #define MASTERVOL(change) { "amixer", "set", "Master", change, NULL } */
+/* static const char *volup[] = MASTERVOL("1db+"); */
+/* static const char *voldown[] = MASTERVOL("1db-"); */
+/* static const char *voltoggle[] = MASTERVOL("toggle"); */
 
 #define PLAYER(action) { "playerctl", action, NULL }
 static const char *playerpause[] = PLAYER("play-pause");
 static const char *playernext[] = PLAYER("next");
 static const char *playerprevious[] = PLAYER("previous");
 
+#include "movestack.c"
 static Key keys[] = {
 	/* modifier						key			function		argument */
 	{ MODKEY,						XK_p,		spawn,			{.v = dmenucmd } },
 	{ 0, 							XK_Menu,	spawn,			{.v = dmenucmd } },
 	{ MODKEY,						XK_t,		spawn,			{.v = todocmd } },
 	{ 0, 							XF86XK_Mail,	spawn,		{.v = mailcmd } },
+	{ MODKEY, 						XF86XK_Mail,	spawn,		{.v = checkmail } },
 	{ 0, 							XF86XK_HomePage,	spawn,	{.v = browser } },
-	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	{.v = volup } },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	{.v = voldown } },
-	{ 0, 							XF86XK_AudioMute,	spawn,	{.v = voltoggle } },
+	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	SHCMD("amixer set Master 1db+") },
+	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1db+") },
+	{ 0, 							XF86XK_AudioMute,	spawn,	SHCMD("amixer set Master toggle") },
 	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
 	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
 	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = playerprevious } },
 	{ MODKEY,						XK_Return, spawn,			{.v = termcmd } },
 	{ MODKEY,						XK_m, spawn,				{.v = musiccmd } },
+	{ MODKEY,						XK_f, spawn,				{.v = filemanagercmd } },
 	{ MODKEY,						XK_b,      togglebar,      {0} },
 	{ MODKEY,						XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,						XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,						XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,						XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,						XK_h,      setmfact,       {.f = -0.05} },
