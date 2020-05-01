@@ -92,7 +92,7 @@ static const char *playerprevious[] = PLAYER("previous");
 #include "movestack.c"
 static Key keys[] = {
 	/* modifier						key			function		argument */
-	{ MODKEY,						XK_p,		spawn,			{.v = dmenucmd } },
+	{ MODKEY,						XK_p,		spawn,			SHCMD("/home/thomas/scripts/openpdf.sh") },
 	{ 0, 							XK_Menu,	spawn,			{.v = dmenucmd } },
 	{ MODKEY,						XK_t,		spawn,			{.v = todocmd } },
 	{ 0, 							XF86XK_Mail,	spawn,		{.v = mailcmd } },
