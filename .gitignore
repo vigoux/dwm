@@ -1,0 +1,7 @@
+*.diff
+config.h
+drw.o
+dwm
+dwm.o
+tags
+util.o
