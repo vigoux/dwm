@@ -99,7 +99,7 @@ static Key keys[] = {
 	{ MODKEY, 						XF86XK_Mail,	spawn,		{.v = checkmail } },
 	{ 0, 							XF86XK_HomePage,	spawn,	{.v = browser } },
 	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	SHCMD("amixer set Master 1db+") },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1db+") },
+	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1db-") },
 	{ 0, 							XF86XK_AudioMute,	spawn,	SHCMD("amixer set Master toggle") },
 	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
 	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
