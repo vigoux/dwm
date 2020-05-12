@@ -10,6 +10,7 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const char statussep         = ';';      /* separator between status bars */
 static const char *fonts[]          = { "monospace:size=20" };
 static const char dracula_fg[] = "#f8f8f2";
 static const char dracula_bg[] = "#282a36";
@@ -37,7 +38,9 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Vimb",  NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "st-256color", NULL, "/home/thomas/scripts/ncspot", 1 << 7, 0, -1 },
+	{ "Spotify", NULL, NULL, 1 << 7, 0, -1 },
 };
 
 /* layout(s) */
@@ -71,10 +74,10 @@ static const char *checkmail[] = { "/home/thomas/scripts/checkmail" };
 
 // Applications
 #define OPENTERMAPP(app) { TERM, "-e", app, NULL }
-static const char *browser[] = { "firefox", NULL };
+static const char *browser[] = { "tabbed", "-c", "vimb", "-e", NULL };
 static const char *todocmd[] = OPENTERMAPP("calcurse");
 static const char *mailcmd[] = OPENTERMAPP("neomutt");
-static const char *musiccmd[] = OPENTERMAPP("/home/thomas/scripts/ncspot");
+/* static const char *musiccmd[] = OPENTERMAPP("/home/thomas/scripts/ncspot"); */
 static const char *termcmd[]  = OPENTERMAPP("/bin/fish");
 static const char *filemanagercmd[] = OPENTERMAPP("/bin/nnn");
 
@@ -93,19 +96,21 @@ static const char *playerprevious[] = PLAYER("previous");
 static Key keys[] = {
 	/* modifier						key			function		argument */
 	{ MODKEY,						XK_p,		spawn,			SHCMD("/home/thomas/scripts/openpdf.sh") },
+	{ MODKEY|ShiftMask,				XK_l,		spawn,			SHCMD("/home/thomas/scripts/dmenulpass.sh") },
 	{ 0, 							XK_Menu,	spawn,			{.v = dmenucmd } },
 	{ MODKEY,						XK_t,		spawn,			{.v = todocmd } },
 	{ 0, 							XF86XK_Mail,	spawn,		{.v = mailcmd } },
 	{ MODKEY, 						XF86XK_Mail,	spawn,		{.v = checkmail } },
 	{ 0, 							XF86XK_HomePage,	spawn,	{.v = browser } },
-	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	SHCMD("amixer set Master 1db+") },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1db-") },
+	{ 0, 							XF86XK_WakeUp,	spawn,	SHCMD("slock") },
+	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	SHCMD("amixer set Master 1%+") },
+	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1%-") },
 	{ 0, 							XF86XK_AudioMute,	spawn,	SHCMD("amixer set Master toggle") },
 	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
 	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
 	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = playerprevious } },
 	{ MODKEY,						XK_Return, spawn,			{.v = termcmd } },
-	{ MODKEY,						XK_m, spawn,				{.v = musiccmd } },
+	{ MODKEY,						XK_m, spawn,				SHCMD("spotify") },
 	{ MODKEY,						XK_f, spawn,				{.v = filemanagercmd } },
 	{ MODKEY,						XK_b,      togglebar,      {0} },
 	{ MODKEY,						XK_j,      focusstack,     {.i = +1 } },
@@ -174,4 +179,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
