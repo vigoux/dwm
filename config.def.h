@@ -76,16 +76,16 @@ static const char *checkmail[] = { "/home/thomas/scripts/checkmail" };
 #define OPENTERMAPP(app) { TERM, "-e", app, NULL }
 static const char *browser[] = { "tabbed", "-c", "vimb", "-e", NULL };
 static const char *todocmd[] = OPENTERMAPP("calcurse");
-static const char *mailcmd[] = OPENTERMAPP("neomutt");
-/* static const char *musiccmd[] = OPENTERMAPP("/home/thomas/scripts/ncspot"); */
+static const char *mailcmd[] = OPENTERMAPP("alot");
 static const char *termcmd[]  = OPENTERMAPP("/bin/fish");
 static const char *filemanagercmd[] = OPENTERMAPP("/bin/nnn");
+static const char *irccmd[] = OPENTERMAPP("irssi");
 
 // Sounds and music
-/* #define MASTERVOL(change) { "amixer", "set", "Master", change, NULL } */
-/* static const char *volup[] = MASTERVOL("1db+"); */
-/* static const char *voldown[] = MASTERVOL("1db-"); */
-/* static const char *voltoggle[] = MASTERVOL("toggle"); */
+#define MASTERVOL(change) { "amixer", "set", "Master", change, NULL }
+static const char *volup[] = MASTERVOL("1%+");
+static const char *voldown[] = MASTERVOL("1%-");
+static const char *voltoggle[] = MASTERVOL("toggle");
 
 #define PLAYER(action) { "playerctl", action, NULL }
 static const char *playerpause[] = PLAYER("play-pause");
@@ -101,11 +101,12 @@ static Key keys[] = {
 	{ MODKEY,						XK_t,		spawn,			{.v = todocmd } },
 	{ 0, 							XF86XK_Mail,	spawn,		{.v = mailcmd } },
 	{ MODKEY, 						XF86XK_Mail,	spawn,		{.v = checkmail } },
-	{ 0, 							XF86XK_HomePage,	spawn,	{.v = browser } },
+	{ MODKEY, 						XF86XK_HomePage,	spawn,	{.v = browser } },
+	{ 0, 							XF86XK_HomePage,	spawn,	{.v = irccmd } },
 	{ 0, 							XF86XK_WakeUp,	spawn,	SHCMD("slock") },
-	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	SHCMD("amixer set Master 1%+") },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	SHCMD("amixer set Master 1%-") },
-	{ 0, 							XF86XK_AudioMute,	spawn,	SHCMD("amixer set Master toggle") },
+	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,	{ .v = volup } },
+	{ 0, 							XF86XK_AudioLowerVolume,	spawn,	{ .v = voldown } },
+	{ 0, 							XF86XK_AudioMute,	spawn,	{ .v = voltoggle } },
 	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
 	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
 	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = playerprevious } },
@@ -127,7 +128,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,				XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,				XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,				XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ShiftMask,				XK_space,  setlayout,      {0} },
+	{ MODKEY,				XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,				XK_space,  togglefloating, {0} },
 	{ MODKEY,						XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,				XK_0,      tag,            {.ui = ~0 } },
