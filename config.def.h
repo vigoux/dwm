@@ -12,10 +12,10 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char statussep         = ';';      /* separator between status bars */
 static const char *fonts[]          = { "monospace:size=20" };
-static const char dracula_fg[] = "#f8f8f2";
-static const char dracula_bg[] = "#282a36";
-static const char dracula_purple[] = "#bd93f9";
-static const char dracula_line[] = "#44475a";
+static const char dracula_fg[] = "#FEEFE1";
+static const char dracula_bg[] = "#0E0701";
+static const char dracula_purple[] = "#E27950";
+static const char dracula_line[] = "#593C22";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { dracula_fg , dracula_bg, dracula_line },
@@ -68,18 +68,21 @@ static const Layout layouts[] = {
 
 /* commands */
 #define TERM "st"
+#define SCRIPT(name) { "/home/thomas/scripts/" name, NULL }
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", NULL };
-static const char *checkmail[] = { "/home/thomas/scripts/checkmail" };
+static const char *checkmail[] = SCRIPT("checkmail");
 
 // Applications
 #define OPENTERMAPP(app) { TERM, "-e", app, NULL }
-static const char *browser[] = { "tabbed", "-c", "vimb", "-e", NULL };
+static const char *browser[] = { TERM, "-e", "sacc", "bitreich.org", NULL };
 static const char *todocmd[] = OPENTERMAPP("calcurse");
 static const char *mailcmd[] = OPENTERMAPP("alot");
 static const char *termcmd[]  = OPENTERMAPP("/bin/fish");
+static const char *volcmd[] = OPENTERMAPP("ncpamixer");
 static const char *filemanagercmd[] = OPENTERMAPP("/bin/nnn");
 static const char *irccmd[] = OPENTERMAPP("irssi");
+static const char *screenshot[] = { "flameshot", "gui", NULL };
 
 // Sounds and music
 #define MASTERVOL(change) { "amixer", "set", "Master", change, NULL }
@@ -110,6 +113,8 @@ static Key keys[] = {
 	{ 0, 							XF86XK_AudioPlay,	spawn,	{.v = playerpause } },
 	{ 0, 							XF86XK_AudioNext,	spawn,	{.v = playernext } },
 	{ 0, 							XF86XK_AudioPrev,	spawn,	{.v = playerprevious } },
+  { 0,              XK_Print, spawn,  {.v = screenshot } },
+  { MODKEY,           XF86XK_AudioPlay, spawn, { .v = volcmd }},
 	{ MODKEY,						XK_Return, spawn,			{.v = termcmd } },
 	{ MODKEY,						XK_m, spawn,				SHCMD("spotify") },
 	{ MODKEY,						XK_f, spawn,				{.v = filemanagercmd } },
