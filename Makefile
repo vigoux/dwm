@@ -48,4 +48,7 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
+void-deps:
+	xbps-install -Syu libXinerama-devel libXft-devel freetype-devel
+
 .PHONY: all options clean dist install uninstall
